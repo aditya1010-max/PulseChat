@@ -1,4 +1,5 @@
-let ws; // We will define this when the user joins
+const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+const ws = new WebSocket(`${protocol}://${window.location.host}`);
 
 // Get all the new elements from the HTML
 const joinScreen = document.getElementById('join-screen');
