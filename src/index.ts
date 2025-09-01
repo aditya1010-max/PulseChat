@@ -24,7 +24,7 @@ const wss: WebSocketServer = new WebSocketServer({ server });
 
 // const publisher: RedisClientType = createClient();
 const publisher: RedisClientType = createClient({
-    url: process.env.REDIS_URL
+    url: process.env.REDIS_URL || "redis://localhost:6379"
 }); //changed above line to this to be pushed in production 
 const subscriber: RedisClientType = publisher.duplicate();
 
