@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scalable Chat</title>
+    <style>
+        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background-color: #f0f2f5; }
+        .container { width: 100%; max-width: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        #join-screen { padding: 2rem; }
+        #chat-screen { display: none; /* Hidden by default */ flex-direction: column; height: 500px; max-height: 90vh; }
+        h1, h2 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 1rem; }
+        input { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 0.75rem; border: none; background-color: #007bff; color: white; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        button:hover { background-color: #0056b3; }
+        #messages { list-style-type: none; margin: 0; padding: 12px; flex-grow: 1; overflow-y: scroll; border-bottom: 1px solid #eee;}
+        #messages li { padding: 8px 12px; }
+        #messages li:nth-child(odd) { background: #f1f1f1; }
+        #chat-form { display: flex; padding: 10px; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Join Screen -->
+        <div id="join-screen">
+            <h1>Join a Chat Room</h1>
+            <form id="join-form">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="room" placeholder="Enter room name" required>
+                </div>
+                <button type="submit">Join</button>
+            </form>
+        </div>
+
+        <!-- Chat Screen -->
+        <div id="chat-screen">
+            <h2 id="room-name"></h2>
+            <ul id="messages"></ul>
+            <form id="chat-form">
+                <input id="input" autocomplete="off" placeholder="Type a message..." required/>
+                <button>Send</button>
+            </form>
+        </div>
+    </div>
+    <script src="/client.js" defer></script>
+</body>
+</html>
