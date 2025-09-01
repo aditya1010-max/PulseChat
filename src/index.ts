@@ -22,7 +22,10 @@ app.use(express.static('public'));
 const server: http.Server = http.createServer(app);
 const wss: WebSocketServer = new WebSocketServer({ server });
 
-const publisher: RedisClientType = createClient();
+// const publisher: RedisClientType = createClient();
+const publisher: RedisClientType = createClient({
+    url: process.env.REDIS_URL
+}); //changed above line to this to be pushed in production 
 const subscriber: RedisClientType = publisher.duplicate();
 
 // This runs when a new user connects
