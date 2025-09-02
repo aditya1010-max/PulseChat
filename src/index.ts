@@ -7,6 +7,7 @@ import { createClient } from 'redis';
 import type { Application } from 'express';
 import type { RawData } from 'ws';
 import type { RedisClientType } from 'redis';
+import "dotenv/config";
 
 // --- Custom WebSocket type ---
 interface CustomWebSocket extends WebSocket {
@@ -25,13 +26,27 @@ const server: http.Server = http.createServer(app);
 const wss: WebSocketServer = new WebSocketServer({ server });
 
 // --- Redis setup ---
-const redisUrl = process.env.REDIS_URL;
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
 if (!redisUrl) {
     throw new Error("REDIS_URL must be set");
 }
 
 const publisher: RedisClientType = createClient({ url: redisUrl });
 const subscriber: RedisClientType = publisher.duplicate();
+
+app.get('/history/:room', async (req, res) => {
+    const room = req.params.room;
+    const key = `chat:history:${room}`;
+
+    try {
+        const messages = await publisher.lRange(key, 0, -1);
+        const parsed = messages.map(m => JSON.parse(m));
+        res.json(parsed.reverse()); // return oldest → newest
+    } catch (err) {
+        res.status(500).json({ error: 'Could not fetch history' });
+    }
+});
+
 
 // --- Handle new client connections ---
 wss.on('connection', (ws: CustomWebSocket) => {
@@ -44,14 +59,24 @@ wss.on('connection', (ws: CustomWebSocket) => {
             ws.room = data.room;
             ws.username = data.username;
             console.log(`User '${ws.username}' joined room '${ws.room}'`);
-        } else if (data.type === 'message') {
+        } 
+        
+        else if (data.type === 'message') {
             if (ws.room && ws.username) {
-                const chatMessage = JSON.stringify({
+                const chatMessage = {
                     type: 'message',
                     username: ws.username,
-                    text: data.text
-                });
-                await publisher.publish(`chat:${ws.room}`, chatMessage);
+                    text: data.text,
+                    timestamp: Date.now()
+                };
+
+                // 1. Publish for real-time delivery
+                await publisher.publish(`chat:${ws.room}`, JSON.stringify(chatMessage));
+
+                // 2. Save in Redis list (history)
+                const key = `chat:history:${ws.room}`;
+                await publisher.lPush(key, JSON.stringify(chatMessage));
+                await publisher.lTrim(key, 0, 99); // keep only last 100 messages
             }
         }
     });
@@ -60,6 +85,7 @@ wss.on('connection', (ws: CustomWebSocket) => {
         console.log(`User '${ws.username}' disconnected`);
     });
 });
+
 
 // --- Start server and subscribe to Redis ---
 async function startServer() {
