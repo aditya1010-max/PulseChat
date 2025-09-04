@@ -1,0 +1,26 @@
+/* Define our color palette using CSS variables */
+:root {
+  --background-dark: #1a1a1a;
+  --background-light: #242424;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --accent-color: #646cff;
+  --border-color: #444;
+  --message-bubble-me: #3b3b98;
+  --message-bubble-other: #3a3a3a;
+}
+
+/* Basic resets and font setup */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+}
+
+* {
+  box-sizing: border-box;
+}

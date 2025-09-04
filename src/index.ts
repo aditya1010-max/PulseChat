@@ -18,7 +18,23 @@ interface CustomWebSocket extends WebSocket {
 // --- App & server setup ---
 const port: number = Number(process.env.PORT) || 3000;
 const app: Application = express();
-app.use(express.static('public'));
+
+import path from "path";
+
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "../pulsechat-frontend/dist")));
+
+app.get("/*any", (req, res) => {
+  res.sendFile(path.join(__dirname, "../pulsechat-frontend/dist/index.html"));
+});
+
+import cors from "cors";
+
+app.use(cors({
+  origin: "http://localhost:5173", // your React dev server
+  credentials: true
+}));
+
 
 const server: http.Server = http.createServer(app);
 
@@ -115,3 +131,16 @@ async function startServer() {
 }
 
 startServer();
+
+// --- Add a new endpoint to get active users ---
+app.get('/users/:room', async (req, res) => {
+    const room = req.params.room;
+    const key = `presence:${room}`;
+
+    try {
+        const users = await publisher.sMembers(key);
+        res.json(users);
+    } catch (err) {
+        res.status(500).json({ error: 'Could not fetch user list' });
+    }
+});

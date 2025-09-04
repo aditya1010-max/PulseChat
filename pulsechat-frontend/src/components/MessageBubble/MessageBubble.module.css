@@ -1,0 +1,29 @@
+.messageBubble {
+  background-color: var(--message-bubble-other);
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
+  max-width: 70%;
+  align-self: flex-start; /* Align to the left by default */
+}
+
+.myMessage {
+  background-color: var(--message-bubble-me);
+  align-self: flex-end; /* Align to the right for "my" messages */
+}
+
+.sender {
+  font-weight: bold;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+  color: #ccc;
+}
+
+/* ... keep all existing styles ... */
+
+.timestamp {
+  font-size: 0.7rem;
+  color: #bbb;
+  margin-top: 0.5rem;
+  text-align: right;
+}

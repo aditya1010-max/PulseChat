@@ -1,0 +1,19 @@
+.chatRoomContainer {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.userListPanel {
+  flex: 0 0 250px; /* Does not grow, does not shrink, base width 250px */
+  background-color: var(--background-light);
+  border-right: 1px solid var(--border-color);
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.chatPanel {
+  flex: 1; /* Takes up the remaining space */
+  display: flex;
+  flex-direction: column; /* Stack message list and input vertically */
+}

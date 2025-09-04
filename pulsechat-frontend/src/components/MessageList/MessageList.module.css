@@ -1,0 +1,8 @@
+
+.messageListContainer {
+  flex: 1;
+  overflow-y: auto; /* Make it scrollable */
+  padding: 1rem;
+  display: flex;
+  flex-direction: column; /* Stack messages vertically */
+}
